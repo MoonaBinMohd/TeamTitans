@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaimWatch AI</title>
+    <link rel="stylesheet" href="css/styles.css?v=20260228-5">
+</head>
+<body>
+    <section id="loginGate" class="login-gate">
+        <div class="login-card">
+            <div class="login-avatar">C</div>
+            <h2>Welcome to ClaimWatch AI</h2>
+            <p class="login-subtitle">Sign in to continue</p>
+
+            <button id="googleLoginBtn" type="button" class="google-login-btn">
+                <span class="google-icon">G</span>
+                <span>Continue with Google</span>
+            </button>
+
+            <div class="login-divider"><span>OR</span></div>
+
+            <form id="loginForm" class="login-form">
+                <label>Email</label>
+                <div class="input-row">
+                    <span class="input-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="3.25" y="6.25" width="17.5" height="11.5" rx="2"></rect>
+                            <path d="M4 8l8 6 8-6"></path>
+                        </svg>
+                    </span>
+                    <input id="loginEmail" type="email" placeholder="you@example.com" required>
+                </div>
+
+                <label>Password</label>
+                <div class="input-row">
+                    <span class="input-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="4.25" y="10.25" width="15.5" height="10.5" rx="2"></rect>
+                            <path d="M8 10V7.8a4 4 0 118 0V10"></path>
+                        </svg>
+                    </span>
+                    <input id="loginPassword" type="password" placeholder="********" required>
+                </div>
+
+                <button type="submit" class="login-submit-btn">Sign in</button>
+                <p id="loginError" class="login-error hidden">Please enter both email and password.</p>
+            </form>
+
+            <div class="login-links">
+                <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                <a href="#" id="signupLink">Need an account? <strong>Sign up</strong></a>
+            </div>
+        </div>
+    </section>
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <img src="assets/logo.svg" alt="ClaimWatch logo" class="logo">
+                <div>
+                    <h1>ClaimWatch</h1>
+                    <p>AI FRAUD DETECTION</p>
+                </div>
+            </div>
+
+            <nav class="side-nav">
+                <a href="#dashboard" class="nav-link active">Dashboard</a>
+                <a href="#claims" class="nav-link">Claims</a>
+                <a href="#history" class="nav-link">History</a>
+                <a href="#fraud-alerts" class="nav-link">Fraud Alerts</a>
+                <a href="#analytics" class="nav-link">Analytics</a>
+                <a href="#new-claim" class="nav-link">New Claim</a>
+            </nav>
+
+            <button id="quickNewClaimBtn" class="quick-new-claim">+ New Claim</button>
+        </aside>
+
+        <main class="content">
+            <section id="dashboard" class="section active">
+                <header class="section-header">
+                    <h2>Dashboard</h2>
+                    <p>Real-time fraud detection overview</p>
+                </header>
+
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <p class="stat-title">TOTAL CLAIMS</p>
+                        <p id="totalClaims" class="stat-value">0</p>
+                        <p class="stat-sub">All time</p>
+                    </article>
+                    <article class="stat-card">
+                        <p class="stat-title">FLAGGED CLAIMS</p>
+                        <p id="flaggedClaims" class="stat-value">0</p>
+                        <p class="stat-sub">High risk</p>
+                    </article>
+                    <article class="stat-card">
+                        <p class="stat-title">TOTAL EXPOSURE</p>
+                        <p id="totalExposure" class="stat-value">$0</p>
+                        <p class="stat-sub">Total claim amount</p>
+                    </article>
+                    <article class="stat-card">
+                        <p class="stat-title">AVG RISK SCORE</p>
+                        <p id="avgRiskScore" class="stat-value">0</p>
+                        <p class="stat-sub">Active alerts</p>
+                    </article>
+                </div>
+
+                <div class="panel-grid">
+                    <article class="panel panel-large">
+                        <h3>Claims Trend (30 Days)</h3>
+                        <svg id="trendSvg" class="trend-svg" viewBox="0 0 860 260" preserveAspectRatio="none"></svg>
+                    </article>
+                    <article class="panel">
+                        <h3>Fraud Distribution</h3>
+                        <div id="fraudDonut" class="donut-chart"></div>
+                        <ul class="legend">
+                            <li>Suspicious <strong id="legendSuspicious">0</strong></li>
+                            <li>Legitimate <strong id="legendLegit">0</strong></li>
+                            <li>Likely Fraud <strong id="legendFraud">0</strong></li>
+                        </ul>
+                    </article>
+                </div>
+
+                <article class="panel">
+                    <h3>Active Fraud Alerts</h3>
+                    <div id="alertsPreview" class="alerts-list"></div>
+                </article>
+            </section>
+
+            <section id="claims" class="section">
+                <header class="section-header section-header-inline">
+                    <div>
+                        <h2>Claims</h2>
+                        <p id="claimsCountLabel">0 claims found</p>
+                    </div>
+                    <button id="newClaimBtnTop" class="btn-dark">+ New Claim</button>
+                </header>
+
+                <div class="panel filters">
+                    <input id="searchInput" type="text" placeholder="Search claims...">
+                    <select id="filterStatus">
+                        <option value="">All Status</option>
+                        <option value="FLAGGED">Flagged</option>
+                        <option value="UNDER REVIEW">Under Review</option>
+                        <option value="APPROVED">Approved</option>
+                    </select>
+                    <select id="filterClassification">
+                        <option value="">All Classifications</option>
+                        <option value="SUSPICIOUS">Suspicious</option>
+                        <option value="LEGITIMATE">Legitimate</option>
+                        <option value="LIKELY FRAUD">Likely Fraud</option>
+                    </select>
+                    <select id="filterType">
+                        <option value="">All Policies</option>
+                        <option value="auto">Auto</option>
+                        <option value="medical">Health</option>
+                        <option value="property">Home</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="panel table-wrap">
+                    <table class="claims-table">
+                        <thead>
+                            <tr>
+                                <th>CLAIM #</th>
+                                <th>POLICYHOLDER</th>
+                                <th>TYPE</th>
+                                <th>AMOUNT</th>
+                                <th>DATE</th>
+                                <th>STATUS</th>
+                                <th>RISK</th>
+                                <th>CLASSIFICATION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="claimsTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="history" class="section">
+                <header class="section-header">
+                    <h2>Recent History</h2>
+                    <p>Latest fraud check results from your submitted claims</p>
+                </header>
+
+                <div class="panel table-wrap">
+                    <table class="claims-table history-table">
+                        <thead>
+                            <tr>
+                                <th>CLAIM #</th>
+                                <th>POLICYHOLDER</th>
+                                <th>TYPE</th>
+                                <th>AMOUNT</th>
+                                <th>DATE</th>
+                                <th>RISK</th>
+                                <th>CLASSIFICATION</th>
+                                <th>DECISION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="fraud-alerts" class="section">
+                <header class="section-header">
+                    <h2>Fraud Alerts</h2>
+                    <p id="alertsCountLabel">0 active alerts</p>
+                </header>
+                <div class="panel filters">
+                    <select id="severityFilter">
+                        <option value="">All</option>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                    </select>
+                    <button class="btn-light">Show Resolved</button>
+                </div>
+                <div id="fraudAlertsList" class="alerts-list"></div>
+            </section>
+
+            <section id="analytics" class="section">
+                <header class="section-header">
+                    <h2>Analytics</h2>
+                    <p>Model performance and fraud detection insights</p>
+                </header>
+
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <p class="stat-title">DETECTION RATE</p>
+                        <p id="detectionRate" class="stat-value">0%</p>
+                        <p class="stat-sub">Flagged claims</p>
+                    </article>
+                    <article class="stat-card">
+                        <p class="stat-title">AVG RISK SCORE</p>
+                        <p id="avgRiskAnalytics" class="stat-value">0</p>
+                        <p class="stat-sub">Across all claims</p>
+                    </article>
+                    <article class="stat-card">
+                        <p class="stat-title">ALERT RESOLUTION</p>
+                        <p id="alertResolution" class="stat-value">0%</p>
+                        <p class="stat-sub">Based on approvals</p>
+                    </article>
+                    <article class="stat-card">
+                        <p class="stat-title">TOTAL EXPOSURE</p>
+                        <p id="totalExposureAnalytics" class="stat-value">$0</p>
+                        <p class="stat-sub">Flagged amount</p>
+                    </article>
+                </div>
+
+                <div class="panel-grid">
+                    <article class="panel">
+                        <h3>Risk Score Distribution</h3>
+                        <div id="riskDistributionBars" class="bars"></div>
+                    </article>
+                    <article class="panel">
+                        <h3>Claims by Policy Type</h3>
+                        <div id="policyTypeDonut" class="donut-chart"></div>
+                    </article>
+                </div>
+
+                <div class="panel-grid">
+                    <article class="panel">
+                        <h3>Fraud Classification</h3>
+                        <div id="fraudClassBars" class="h-bars"></div>
+                    </article>
+                    <article class="panel">
+                        <h3>Exposure by Policy Type ($)</h3>
+                        <div id="exposureBars" class="bars"></div>
+                    </article>
+                </div>
+
+                <article class="panel">
+                    <h3>Alerts by Severity</h3>
+                    <div id="severityCards" class="severity-cards"></div>
+                </article>
+            </section>
+
+            <section id="new-claim" class="section">
+                <header class="section-header">
+                    <h2>New Claim</h2>
+                    <p>Analyze and submit a claim for fraud screening</p>
+                </header>
+                <form id="newClaimForm" class="panel claim-form">
+                    <div class="form-grid">
+                        <label>Claim Number
+                            <input id="claimNumber" type="text" readonly>
+                        </label>
+                        <label>Policy Type
+                            <select name="type" required>
+                                <option value="auto">Auto</option>
+                                <option value="medical">Health</option>
+                                <option value="property">Home</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </label>
+                        <label>Policyholder Name *
+                            <input name="customer" type="text" required>
+                        </label>
+                        <label>Email
+                            <input name="email" type="email" placeholder="john@example.com">
+                        </label>
+                        <label>Claim Amount ($) *
+                            <input name="amount" type="number" min="1" required>
+                        </label>
+                        <label>Claim Date
+                            <input name="claimDate" type="date">
+                        </label>
+                        <label>Incident Date
+                            <input name="incidentDate" type="date">
+                        </label>
+                        <label>Location
+                            <input name="location" type="text" placeholder="City, State">
+                        </label>
+                        <label class="full">Incident Description *
+                            <textarea name="description" rows="5" required></textarea>
+                        </label>
+                        <label>Prior Claims Count
+                            <input name="priorClaims" type="number" min="0" value="0">
+                        </label>
+                    </div>
+                    <button id="submitClaimBtn" type="submit" class="btn-dark btn-large">Analyze &amp; Submit Claim</button>
+                </form>
+                <div id="analysisResult" class="panel result-card hidden"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/app.js?v=20260228-5"></script>
+</body>
+</html>

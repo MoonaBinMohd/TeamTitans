@@ -1,0 +1,114 @@
+{
+  "appName": "Tunneling Claim Watch AI",
+  "version": "1.0.0",
+  "environment": "development",
+  "api": {
+    "baseUrl": "http://localhost:5000/api",
+    "timeout": 30000,
+    "retries": 3
+  },
+  "ai": {
+    "model": {
+      "name": "ClaimAnalysisModel",
+      "version": "1.0.0",
+      "type": "classification"
+    },
+    "thresholds": {
+      "approval": 0.85,
+      "review": 0.60,
+      "rejection": 0.30
+    },
+    "features": {
+      "anomalyDetection": true,
+      "fraudDetection": true,
+      "autoScore": true
+    }
+  },
+  "tunneling": {
+    "enabled": true,
+    "protocol": "tls",
+    "encryption": "AES-256",
+    "routes": {
+      "medical": "/process/medical",
+      "auto": "/process/auto",
+      "property": "/process/property",
+      "other": "/process/general"
+    },
+    "timeout": 60000,
+    "retryPolicy": {
+      "maxRetries": 3,
+      "backoff": "exponential"
+    }
+  },
+  "monitoring": {
+    "enabled": true,
+    "metricsInterval": 5000,
+    "logLevel": "info",
+    "sentry": {
+      "enabled": false,
+      "dsn": "https://your-sentry-dsn@sentry.io/project-id"
+    }
+  },
+  "notifications": {
+    "email": {
+      "enabled": true,
+      "provider": "sendgrid",
+      "from": "noreply@claimswatch.ai"
+    },
+    "webhooks": {
+      "enabled": true,
+      "timeout": 5000
+    },
+    "channels": ["email", "in-app", "webhook"]
+  },
+  "storage": {
+    "type": "localstorage",
+    "backend": {
+      "type": "mongodb",
+      "connection": "mongodb://localhost:27017/claims_db"
+    },
+    "cache": {
+      "enabled": true,
+      "ttl": 3600
+    }
+  },
+  "security": {
+    "cors": {
+      "enabled": true,
+      "origins": ["http://localhost:8000", "http://localhost:3000"]
+    },
+    "rateLimit": {
+      "enabled": true,
+      "windowMs": 900000,
+      "maxRequests": 100
+    },
+    "authentication": {
+      "type": "jwt",
+      "tokenExpiry": 3600000
+    }
+  },
+  "ui": {
+    "theme": "light",
+    "language": "en",
+    "dateFormat": "MM/DD/YYYY",
+    "currency": "USD"
+  },
+  "features": {
+    "dashboard": true,
+    "claimsManagement": true,
+    "analytics": true,
+    "reports": true,
+    "bulkOperations": true,
+    "apiIntegration": true,
+    "customWorkflows": false,
+    "advancedAI": false
+  },
+  "logging": {
+    "enabled": true,
+    "format": "json",
+    "level": "info",
+    "file": "./logs/app.log",
+    "maxSize": "10m",
+    "maxFiles": 10
+  }
+}
